@@ -1,7 +1,51 @@
 package server;
 
-/**
- * Created by guillaumebrosse on 21/01/2016.
- */
-public class Authentification {
+import java.net.*;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.io.*;
+
+public class Authentification implements Runnable {
+
+    private Socket socket;
+    private PrintWriter out = null;
+    private BufferedReader in = null;
+    private String login = "zero";
+    public Thread threadEmission;
+    public Thread threadReception;
+    private AccepterConnexion accepterConnexion;
+
+    public Authentification(Socket s, AccepterConnexion a){
+        socket = s;
+        accepterConnexion=a;
+    }
+
+    public void run() {
+
+        try {
+
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream());
+
+
+            out.println("Entrez votre login :");
+            out.flush();
+            login = in.readLine();
+
+
+            out.println("connecte");
+            System.out.println(login +" vient de se connecter ");
+            out.flush();
+
+            threadEmission = new Thread(new Emission(in,login));
+            threadEmission.start();
+
+            threadReception = new Thread(new Reception(out,login));
+            threadReception.start();
+
+        } catch (IOException e) {
+
+            System.err.println(login+" ne répond pas !");
+        }
+    }
 }
