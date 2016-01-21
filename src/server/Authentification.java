@@ -37,15 +37,19 @@ public class Authentification implements Runnable {
             System.out.println(login +" vient de se connecter ");
             out.flush();
 
-            threadEmission = new Thread(new Emission(in,login));
+            threadEmission = new Thread(new Emission(out));
             threadEmission.start();
 
-            threadReception = new Thread(new Reception(out,login));
+            threadReception = new Thread(new Reception(in, login, this.accepterConnexion));
             threadReception.start();
 
         } catch (IOException e) {
 
             System.err.println(login+" ne répond pas !");
         }
+    }
+    public void sendMessage(String login, String str){
+        out.println(login+": "+ str);
+        out.flush();
     }
 }

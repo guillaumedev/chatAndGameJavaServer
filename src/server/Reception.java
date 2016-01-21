@@ -11,9 +11,10 @@ public class Reception implements Runnable {
 
     private BufferedReader in;
     private String message = null, login = null;
+    private AccepterConnexion ac;
 
-    public Reception(BufferedReader in, String login){
-
+    public Reception(BufferedReader in, String login, AccepterConnexion ac){
+        this.ac = ac;
         this.in = in;
         this.login = login;
     }
@@ -25,9 +26,10 @@ public class Reception implements Runnable {
 
                 message = in.readLine();
                 System.out.println(login+" : "+message);
+                this.ac.notifierAll(login, message);
 
             } catch (IOException e) {
-
+                
                 e.printStackTrace();
             }
         }

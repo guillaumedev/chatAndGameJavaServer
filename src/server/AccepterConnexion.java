@@ -14,11 +14,17 @@ public class AccepterConnexion implements Runnable{
     private ArrayList<Authentification> listUser;
 
     public Thread authentificationThread;
+
     public AccepterConnexion(ServerSocket ss){
         socketserver = ss;
         listUser=new ArrayList<Authentification>();
     }
 
+    public void notifierAll(String login, String str){
+        for(int i=0; i<listUser.size(); i++){
+            listUser.get(i).sendMessage(login, str);
+        }
+    }
     public void run() {
 
         try {
